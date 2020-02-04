@@ -9,11 +9,10 @@
 
 ## Objective
 
-To provide simple APIs for loading data of various formats, and preparing
+To provide simple APIs for loading data from various formats, and preparing
 datasets for use in training deep learning models with TensorFlow.
 
-The design of the API and summary written here is based on
-the open source code and documentation of 
+This API design for Java follows that of Python's
 [tf.data](https://www.tensorflow.org/api_docs/python/tf/data).
 
 ## Motivation
@@ -36,17 +35,22 @@ training process in TensorFlow Java's port of [tf.keras](https://www.tensorflow.
 
 ## Design Proposal
 
-The `Dataset` class provides the main interface for creating and transforming datasets. A dataset represents a sequence of elements, where each element is a collection of tensor components. 
+The `Dataset` class represents a sequence of elements which can be iterated over and
+transformed. Each element is a list of "output" operands, represented by the type `List<Output<?>>`. 
+
+Note: An `Output` is a symbolic handle to a tensor produced by a TensorFlow op. In graph
+mode, `Output` objects will not have a concrete `Tensor` value unless all dependent operations
+are run in a `Session` (this is done "in-real-time" in eager mode).
 
 ### Construction
 
-Datasets can be constructed either directoy from a data source (e.g. a list of tensors representing the components of the dataset), or as a transformation on an existing dataset.
+Datasets can be constructed either directly from a data source (e.g. a list of tensors representing the components of the dataset), or as a transformation on an existing dataset.
 
 #### From Data Source
 
 To construct a dataset from a list of tensor components, use 
 `Dataset.fromTensorSlices( ... )`. For example, say we are working
-with a standard feature-label dataset consisting of 4 elements.
+with a standard feature/label dataset which has 4 elements.
 
 ```java
 float[][] features = new float[][] {
@@ -64,12 +68,11 @@ float[] labels = new float[] {
 }
 ```
 
-
 A dataset can be constructed from a list of the constant `Operand`s generated
 from this dataset, and a list of `DataType` objects corresponding
 to the type of each component:
 
-(NOTE: each of the input components must share the same first "batch" dimension.)
+Note: Each of the input components must share the same first "batch" dimension.
 
 ```java
 Ops tf = // ... TensorFlow Ops accessor (either graph or eager)
@@ -84,13 +87,18 @@ Other data sources are also possible, using `tf.data` ops. Datasets can also be 
 
 #### Transformations on Existing Datasets
 
-Transformed datasets can be created from existing datasets. For example, to group elements in the above dataset into batches of size `2`, use `Dataset.batch(int batchSize)`:
+Once a dataset has been created from a data source it can be transformed by calling
+methods on the `Dataset` object. For example, to group elements in the above dataset into batches of size `2`, use `Dataset.batch(int batchSize)`:
 
 ```java
 dataset = dataset.batch(2)
 ```
-The call to `.batch` (as with the other transformations) returns a new dataset
-object, to allow chaining of these transformations.
+
+Dataset transformations alter both the values and shapes of the original elements, and
+return a *new* `Dataset` object.
+
+In this case, the original dataset had 4 elements of shape `[features: (3,) labels: (1,)]`.
+Once the `.batch` transformation is applied, the new dataset has 2 elements (batches) of shape `[features: (2, 3), labels: (2, 1)]`.
 
 Similar transformations include `.skip`, `.take`, `.map`, `.filter`, etc.
 
@@ -107,7 +115,7 @@ to the retrieved tensors.
 
 #### Eager Mode: Iterable
 The `Dataset` class implements the `Iterable` interface, so in
-eager mode, iteration through dataset elements is possible using a standard for-each loop.
+eager mode, iteration over dataset elements is possible using a standard for-each loop.
 
 Using the same example dataset from above, dataset elements can be extracted and
 used as follows:
@@ -151,7 +159,6 @@ Note that the make-iterator operation can be re-run to re-initialize
 the iterator, to iterate through the dataset a second time.
 
 ```java
-
 try (Graph graph = new Graph()) {
     // Graph mode Ops accessor
     Ops tf = Ops.create(graph)
