@@ -103,9 +103,9 @@ Once the `.batch` transformation is applied, the new dataset has 2 elements (bat
 Similar transformations include `.skip`, `.take`, `.map`, `.filter`, etc.
 
 
-### Iterating through Dataset Elements
+### Iterating over Dataset Elements
 
-The primary use of a dataset is for iteration through its elements.
+The primary use of a dataset is for iteration over its elements.
 Each row (or batch) element is represented as a list of tensor components, with
 type `List<Output<?>>`. The tensor components of this elements can be accessed using `List.get(int index)`.
 
@@ -142,9 +142,9 @@ for (List<Output<?>> batch : dataset) {
 #### Graph Mode: OneShotIterator
 
 The above code will not work in graph mode, which requires the use of `Session`s
-to run the computations. In graph mode, datasets can be iterated through using the `OneShotIterator` abstraction, and a while loop.
+to run the computations. In graph mode, datasets can be iterated over using the `OneShotIterator` abstraction, and a while loop.
 
-`OneShotIterator` allows iteration through a dataset's elements "one time", using
+`OneShotIterator` allows iteration over a dataset's elements "one time", using
 repeated calls to `Session.run`. 
 
 The `OneShotIterator` object has two fields:
@@ -156,7 +156,7 @@ Once the iterator is initialized, repeated calls to `Session.run` will populate 
 been retrieved. After this, `Session.run` will result in an `IndexOutOfBounds` exception.
 
 Note that the make-iterator operation can be re-run to re-initialize
-the iterator, to iterate through the dataset a second time.
+the iterator, to iterate over the dataset a second time.
 
 ```java
 try (Graph graph = new Graph()) {
@@ -181,7 +181,7 @@ try (Graph graph = new Graph()) {
             .addTarget(makeIteratorOp)
             .run();
 
-        // Iterate through dataset elements
+        // Iterate over dataset elements
         while (true) {
             try {
                 List<Tensor<?>> outputs = session.runner()
