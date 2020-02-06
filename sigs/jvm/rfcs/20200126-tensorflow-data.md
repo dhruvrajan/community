@@ -22,7 +22,7 @@ configuring iteration and batching over a sequence of elements,
 and performing transformations on individual or grouped dataset elements.
 
 The goal of this project is to provide a high-level abstraction which simplifies
-this workfow, based on TensorFlow data ops, with syntax closely mirorring
+this workflow, based on TensorFlow data ops, with syntax closely mirroring
 Python's [tf.data](https://www.tensorflow.org/api_docs/python/tf/data).
 
 ## User Benefit
@@ -83,7 +83,7 @@ Dataset dataset = Dataset.fromTensorSlices(
 ```
 
 
-Other data sources are also possible, using `tf.data` ops. Datasets can also be constructed from 
+Other data sources are also possible, using `tf.data` ops; these include TFRecord files, CSV files, and more.
 
 #### Transformations on Existing Datasets
 
@@ -133,7 +133,7 @@ for (List<Output<?>> batch : dataset) {
     Tensor<TInt32> featureBatch = element.get(0).tensor().expect(TInt32.DTYPE);
     Tensor<TInt32> labelBatch = element.get(1).tensor().expect(TInt32.DTYPE);
 
-    // Perform batch-wise computations on featreBatch and labelBatch
+    // Perform batch-wise computations on featureBatch and labelBatch
 }
 
 ```
@@ -205,5 +205,5 @@ try (Graph graph = new Graph()) {
 
 ## Questions and Discussion Topics
 
-Se [MNISTBasicEagerClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicEagerClassifier.java) and [MNISTBasicGraphClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicGraphClassifier.java) as examples using the described API
+See [MNISTBasicEagerClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicEagerClassifier.java) and [MNISTBasicGraphClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicGraphClassifier.java) as examples using the described API
 for training a simple MNIST classifier.
