@@ -57,19 +57,21 @@ To construct a dataset from a list of tensor components, use
 with a standard feature/label dataset which has 4 elements.
 
 ```java
-float[][] features = new float[][] {
-    {1, 2, 3},
-    {4, 5, 6},
-    {7, 8, 9},
-    {10, 11, 12}
-}
+FloatNdArray features = StdArrays.ndCopyOf(
+    new float[][] {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+        {10, 11, 12}
+});
 
-float[] labels = new float[] {
-    0,
-    1,
-    1,
-    0
-}
+FloatNdArray labels = StdArrays.ndCopyOf(
+    new float[] {
+        0,
+        1,
+        1,
+        0
+});
 ```
 
 A dataset can be constructed from a list of the constant `Operand`s generated
@@ -236,12 +238,6 @@ try (Graph graph = new Graph()) {
 }
 
 ```
-
-## Questions and Discussion Topics
-
-See [MNISTBasicEagerClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicEagerClassifier.java) and [MNISTBasicGraphClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicGraphClassifier.java) as examples using the described API
-for training a simple MNIST classifier.
-
 
 ## Release Plan
 
